@@ -1,0 +1,336 @@
+<script language="JavaScript">
+    function tog(source) {
+        checkboxes = document.getElementsByClassName("cb");
+        for (var i=0, n=checkboxes.length; i<n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>
+
+<html>
+<head>
+	<title>Contact</title>
+	<meta charset="utf-8" />
+	
+	<link rel="stylesheet" href="style.css" type="text/css" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body class="body">
+	<header class="mainHeader">
+		<img src="img/logo.png">
+
+		<nav><ul>
+			<li><a href="teacher.html">Teachers</a></li>
+			<li class="active"><a href="#">Courses</a></li>
+			<li><a href="instructions.html">Instructions</a></li>
+		</ul></nav>
+	</header>
+	
+	<div class="bodyArea">
+	    <div class="content">
+	        <article class="article">
+	            <header class="articleHeader">
+	                <h2>Course Form</h2>
+	            </header>
+
+                <form class="form" action="course.php" method="post">
+                    <div class="course">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for="freq">Times per week:</label>
+                                    <select name="freq">
+                                        <option value="1">1</option> 
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                    </select> 
+                                </td>
+                                
+                                <td>
+                                    <label for="name">Class Name:</label> 
+                                    <input type="text" name="name" />
+                                </td>
+                                
+                                <td>
+                                    <label for="teacher">Teacher: </label>
+                                    <input type="text" name="teacher" /> <br>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label for="student1">Student 01:</label>
+                                    <input type="text" name="student1" />
+                                </td>
+                                
+                                <td>    
+                                    <label for="student2">Student 02:</label>
+                                    <input type="text" name="student2" />
+                                </td>  
+                                
+                                <td> 
+                                    <label for="student3">Student 03:</label>
+                                    <input type="text" name="student3" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student4">Student 04:</label>
+                                    <input type="text" name="student4" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student5">Student 05:</label>
+                                    <input type="text" name="student5" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student6">Student 06:</label>
+                                    <input type="text" name="student6" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student7">Student 07:</label>
+                                    <input type="text" name="student7" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student8">Student 08:</label>
+                                    <input type="text" name="student8" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student9">Student 09:</label>
+                                    <input type="text" name="student9" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student10">Student 10:</label>
+                                    <input type="text" name="student10" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student11">Student 11:</label>
+                                    <input type="text" name="student11" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student12">Student 12:</label>
+                                    <input type="text" name="student12" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student13">Student 13:</label>
+                                    <input type="text" name="student13" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student14">Student 14:</label>
+                                    <input type="text" name="student14" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student15">Student 15:</label>
+                                    <input type="text" name="student15" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student16">Student 16:</label>
+                                    <input type="text" name="student16" />
+                                </td>
+                                
+                                <td>    
+                                    <label for="student17">Student 17:</label>
+                                    <input type="text" name="student17" />
+                                </td>
+                                
+                                <td>    
+                                    <label for="student18">Student 18:</label>
+                                    <input type="text" name="student18" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student19">Student 19:</label>
+                                    <input type="text" name="student19" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student20">Student 20:</label>
+                                    <input type="text" name="student20" />
+                                </td>
+                                
+                                <td>    
+                                    <label for="student21">Student 21:</label>
+                                    <input type="text" name="student21" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student22">Student 22:</label>
+                                    <input type="text" name="student22" />
+                                </td>
+                                
+                                <td>    
+                                    <label for="student23">Student 23:</label>
+                                    <input type="text" name="student23" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student24">Student 24:</label>
+                                    <input type="text" name="student24" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student25">Student 25:</label>
+                                    <input type="text" name="student25" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student26">Student 26:</label>
+                                    <input type="text" name="student26" />
+                                </td>
+                                
+                                <td>
+                                    <label for="student27">Student 27:</label>
+                                    <input type="text" name="student27" /> <br>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="student28">Student 28:</label>
+                                    <input type="text" name="student28" />
+                                </td>
+                                
+                                <td> 
+                                    <label for="student29">Student 29:</label>
+                                    <input type="text" name="student29" />
+                                </td>
+                                
+                                <td> 
+                                    <label for="student30">Student 30:</label>
+                                    <input type="text" name="student30" /> <br>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                    <!-- Checkboxes -->
+                    <p class="checkboxes">
+                        <table>
+                            <tr>
+                                <label for="toggle">Toggle All</label>
+                                <input type="checkbox" name="toggle" onClick="tog(this)" /> <br>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="toggle">Eddie's Room</label>
+                                    <input class="cb" type="checkbox" name="1A" value="1A" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">The Littles' Room</label>
+                                    <input class="cb" type="checkbox" name="1B" value="1B" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">The Lab</label>
+                                    <input class="cb" type="checkbox" name="1C" value="1C" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Nancy's Office</label>
+                                    <input class="cb" type="checkbox" name="NO" value="NO" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Dance Studio</label>
+                                    <input class="cb" type="checkbox" name="DS" value="DS" />
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <label for="toggle">Right Lobby</label>
+                                    <input class="cb" type="checkbox" name="RL" value="RL" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Left Lobby</label>
+                                    <input class="cb" type="checkbox" name="LL" value="LL" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Back-door Foyer</label>
+                                    <input class="cb" type="checkbox" name="BF" value="BF" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Art Room</label>
+                                    <input class="cb" type="checkbox" name="2A" value="2A" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Abraham's Room</label>
+                                    <input class="cb" type="checkbox" name="2B" value="2B" />
+                                </td>
+                            </tr>    
+                            
+                            <tr>
+                                <td>
+                                    <label for="toggle">The History Room</label>
+                                    <input class="cb" type="checkbox" name="2C" value="2C" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Dan's Room</label>
+                                    <input class="cb" type="checkbox" name="2D" value="2D" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Andrew's Office</label>
+                                    <input class="cb" type="checkbox" name="2E" value="2E" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Music Room</label>
+                                    <input class="cb" type="checkbox" name="MR" value="MR" />
+                                </td>
+                                
+                                <td>
+                                    <label for="toggle">Eleanor's Office</label>
+                                    <input class="cb" type="checkbox" name="EO" value="EO" />
+                                </td>
+                            </tr>
+                        </table>
+                    </p>
+                        
+                    <p class="submit">
+                        <input type="submit" value="Submit" />
+                    </p>
+                </form>
+	        </article>
+        </div>
+	</div>
+	
+	<footer class="mainFooter">
+	    <p>Copyright &copy 2014 me All rights reserved</p>
+	</footer>
+</body>
+</html>
