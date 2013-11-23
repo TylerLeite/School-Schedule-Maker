@@ -6,7 +6,7 @@ public class Opening {
 	
 	public Opening(int day, int time){
 		this.day  = day; //0 = Mon, 4 = Fri
-		this.time = time; //0 = 8:30(-9:15), 7 = 2:40(-3:25)
+		this.time = time; //0 = 8:30(-9:15), 8 = 2:40(-3:25)
 	}
 	
 	public String toString(){
