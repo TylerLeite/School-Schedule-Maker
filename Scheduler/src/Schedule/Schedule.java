@@ -8,7 +8,7 @@ import Course.Course;
 
 
 public class Schedule {
-    public static final int T = 11; // 9 periods per day (Excluding Snack)
+    public static final int T = 9; // 9 periods per day (Excluding Snack)
     public static final int D = 5; // Approximately 5 school days per week
     public static final int LUNCH = 5;
     
