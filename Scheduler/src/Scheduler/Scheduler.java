@@ -107,6 +107,7 @@ public class Scheduler {
         /* Reset all courses, rooms, and people */
         for (Person person : people.values()){
             person.sch.refresh();
+            person.coursesLeftToSchedule = person.coursesToSchedule;
         }
         
         for (Room room : rooms.values()){
@@ -175,9 +176,12 @@ public class Scheduler {
                             rooms.get(room).sch.scheduleCourse(opening, course);
                           //Teacher
                             people.get(course.getTeacher()).sch.scheduleCourse(opening, course);
-                          //Students
-                            for (String student : course.getStudents())
+                            people.get(course.getTeacher()).coursesLeftToSchedule -= 1;
+                            //Students
+                            for (String student : course.getStudents()){
                                 people.get(student).sch.scheduleCourse(opening, course);
+                            	people.get(student).coursesLeftToSchedule -= 1;
+                            }
 
                             /* Mark that the day has been used. */
                             OpenDays[opening.day] = false;
@@ -257,24 +261,14 @@ public class Scheduler {
         for (Room room : rooms.values())
             Output.writeSch(room.sch.schedule, "schedules/rooms/" + room.name);
         
-        for (Person person : people.values())
+        for (Person person : people.values()){
+        	if (person.sch.openings.size() < 10)
+        		System.out.println(person.name);
             if (person instanceof Student)
                 Output.writeSch(person.sch.schedule, "schedules/students/" + person.name);
             else
                 Output.writeSch(person.sch.schedule, "schedules/teachers/" + person.name);
+        }
     }
     
 }
-
-//if (attempts == -10000){
-/*
-   allowLunch = true;
-   System.out.println("Allowing lunch classes");
-
-} else if (attempts == 200){
-   repeatDays = true;
-   System.out.println("Allowing repeat days");
-} else if (attempts == 100){
-//*/
-//    return;
-//}
