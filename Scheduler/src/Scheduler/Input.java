@@ -92,6 +92,7 @@ public class Input {
             if (!Scheduler.people.containsKey(student))
                 Scheduler.people.put(student, new Student(student));
             course.addPerson(student);
+            Scheduler.people.get(student).addCoursesToSchedule(course.freq);
         }
     }
     
