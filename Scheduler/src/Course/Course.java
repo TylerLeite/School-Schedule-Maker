@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Scheduler.Scheduler;
 import Schedule.Schedule;
-import People.Teacher;
+
 
 public class Course {
     public String name;
@@ -30,19 +30,17 @@ public class Course {
     }
 
     public void getPriority(){
-        int teacherOpenings = ((Teacher)Scheduler.people.get(getTeacher())).sch.openings.size();
+        double result = 0;
         
-        int teacherCourseCount = 0;
-        for (String course : Scheduler.courseNames){
-            if (Scheduler.courses.get(course).getTeacher().equals(getTeacher()))
-                teacherCourseCount += Scheduler.courses.get(course).freq;
+        for (String person : people){
+        	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
+        	int studentCourseCount = Scheduler.people.get(person).sch.openings.size();
+        	if (result > 1 - (double)studentCourseCount/studentOpenings)
+        	    result = 1 - (double)studentCourseCount/studentOpenings;
         }
         
-        double teacherAvailability = (double)teacherCourseCount/teacherOpenings;
-        double roomAvailability = rooms.size()/Scheduler.rooms.size();
-        double result = (roomAvailability + teacherAvailability)*50;
-        
-        result -= Scheduler.failPoints.get(name);
+        //result /= people.size();
+        result -= Scheduler.failPoints.get(name)*2;
         
         priority = result + Math.random();
     }
@@ -50,7 +48,7 @@ public class Course {
     public int getPriorityOld(){
         int roomsSize = rooms.size();
         int teacherOpenings = Scheduler.people.get(getTeacher()).sch.openings.size();
-        int priority = 4;
+        int priority = 5;
         
         if (teacherOpenings <= 16)
             return 0;
