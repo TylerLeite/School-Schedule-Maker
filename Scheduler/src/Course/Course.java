@@ -30,7 +30,7 @@ public class Course {
     }
 
     public void getPriority(){
-        double result = 0;
+        double result = 1;
         
         for (String person : people){
         	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
