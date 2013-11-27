@@ -33,10 +33,10 @@ public class Course {
         double result = 1;
         
         for (String person : people){
-        	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
-        	int studentCourseCount = Scheduler.people.get(person).sch.openings.size();
-        	if (result > 1 - (double)studentCourseCount/studentOpenings)
-        	    result = 1 - (double)studentCourseCount/studentOpenings;
+        	int openings = Scheduler.people.get(person).sch.openings.size();
+        	int courseCount = Scheduler.people.get(person).coursesToSchedule;
+        	if (result > 1 - (double)courseCount/openings)
+        	    result = 1 - (double)courseCount/openings;
         }
         
         //result /= people.size();
