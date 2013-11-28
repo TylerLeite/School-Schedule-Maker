@@ -29,13 +29,23 @@ public class Scheduler {
     private static boolean allowLunch = false;
     
     public static void main(String[] args) {
+        ArrayList<Integer> attemptsHistory = new ArrayList<Integer>();
         /** Pinnacle of coding. **/
         System.out.println("Hello, world!");
         
         System.out.println("Reading files.");
         input();
+        
         System.out.println("Scheduling courses.");
-        schedule();
+        while (attemptsHistory.size() != 100){
+            attemptsHistory.add(schedule());
+            output();
+        }
+        int avgAttempts = 0;
+        for (int i=0; i < attemptsHistory.size(); i++)
+            avgAttempts += attemptsHistory.get(i);
+        System.out.println("AVG: " + avgAttempts/attemptsHistory.size());
+       
         System.out.println("Outputting schedules");
         output();
         
@@ -180,7 +190,7 @@ public class Scheduler {
                             //Students
                             for (String student : course.getStudents()){
                                 people.get(student).sch.scheduleCourse(opening, course);
-                            	people.get(student).coursesLeftToSchedule -= 1;
+                                people.get(student).coursesLeftToSchedule -= 1;
                             }
 
                             /* Mark that the day has been used. */
@@ -224,15 +234,13 @@ public class Scheduler {
         }
     }
     
-    protected static void schedule(){
+    protected static int schedule(){
         /* Start your schedulers! */
         boolean Scheduled = false;
         
         /* If at first you don't succeed... */
         int attempts = 0;
         while (!Scheduled){
-			System.out.println("Attempt: " + attempts);
-                
             Scheduled = true;
             setup();
             
@@ -245,15 +253,20 @@ public class Scheduler {
                 
                 courseNames.remove(0);
                 for (Course course : courses.values()){
-                	course.getPriority();
+                    course.getPriority();
                 }
                 
                 courseNames = qsort(courseNames);
             }
             
             attempts += 1;
-
         }
+        
+
+        System.out.println("Attempts: " + attempts);
+        for (Course course : courses.values())
+            Scheduler.failPoints.put(course.name, 0);
+        return attempts;
     }
     
     protected static void output(){
@@ -262,8 +275,8 @@ public class Scheduler {
             Output.writeSch(room.sch.schedule, "schedules/rooms/" + room.name);
         
         for (Person person : people.values()){
-        	if (person.sch.openings.size() < 10)
-        		System.out.println(person.name);
+            if (person.sch.openings.size() < 10)
+                System.out.println(person.name);
             if (person instanceof Student)
                 Output.writeSch(person.sch.schedule, "schedules/students/" + person.name);
             else
