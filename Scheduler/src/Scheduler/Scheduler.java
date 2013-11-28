@@ -134,7 +134,7 @@ public class Scheduler {
         courseNames = qsort(courseNames);
         
         /* Shh! */
-        //calebAndMatthewClaws();
+        calebAndMatthewClaws();
     }
     
     protected static HashSet<Opening> checkPossible(Course course){
