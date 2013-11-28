@@ -28,6 +28,7 @@ public class Input {
         try {
             encoded = Files.readAllBytes(Paths.get(path));
         } catch (IOException e){
+        	System.out.println("Error reading file: " + path);
             return "error;-1;error;error;error"; // Formatted to avoid index out of range errors
         }
         
