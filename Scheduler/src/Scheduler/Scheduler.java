@@ -37,7 +37,7 @@ public class Scheduler {
         input();
         
         System.out.println("Scheduling courses.");
-        while (attemptsHistory.size() != 100){
+        while (attemptsHistory.size() != 500){
             attemptsHistory.add(schedule());
             output();
         }
@@ -134,7 +134,7 @@ public class Scheduler {
         courseNames = qsort(courseNames);
         
         /* Shh! */
-        calebAndMatthewClaws();
+        //calebAndMatthewClaws();
     }
     
     protected static HashSet<Opening> checkPossible(Course course){
