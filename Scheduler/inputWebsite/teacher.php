@@ -1,6 +1,6 @@
 <?php
     $data = $_POST['name'];
-    $fileName = '/var/www/localweb/scheduler/dat/'.$data.'.tch';
+    $fileName = '../dat/'.$data.'.tch';
     $data .= ';'.$_POST['0,0'].'~';
     $data .= $_POST['0,1'].'~';
     $data .= $_POST['0,2'].'~';

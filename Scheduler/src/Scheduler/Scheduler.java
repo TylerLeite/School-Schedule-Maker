@@ -37,7 +37,7 @@ public class Scheduler {
         input();
         
         System.out.println("Scheduling courses.");
-        while (attemptsHistory.size() != 500){
+        while (attemptsHistory.size() != 10){
             attemptsHistory.add(schedule());
             output();
         }
