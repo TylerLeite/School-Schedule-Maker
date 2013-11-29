@@ -17,7 +17,7 @@ import Schedule.Schedule;
 
 
 public class Input {
-    public static final String path = "/var/www/localweb/scheduler/dat"; // Path to class data files
+    public static final String path = "dat"; // Path to class data files
     public static final String crsFEnd = ".dat"; // File ending for class data files
     public static final String tchFEnd = ".tch"; // File ending for teacher data files
     
@@ -28,7 +28,7 @@ public class Input {
         try {
             encoded = Files.readAllBytes(Paths.get(path));
         } catch (IOException e){
-        	System.out.println("Error reading file: " + path);
+            System.out.println("Error reading file: " + path);
             return "error;-1;error;error;error"; // Formatted to avoid index out of range errors
         }
         
