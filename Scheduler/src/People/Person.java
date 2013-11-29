@@ -15,7 +15,7 @@ public abstract class Person {
     }
     
     public void addCoursesToSchedule(int freq){
-    	coursesToSchedule += freq;
-    	coursesLeftToSchedule += freq;
+        coursesToSchedule += freq;
+        coursesLeftToSchedule += freq;
     }
 }
