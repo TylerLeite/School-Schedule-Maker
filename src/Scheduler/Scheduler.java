@@ -14,6 +14,8 @@ import Schedule.Schedule;
 
 
 public class Scheduler {
+    public static final int runTimes = 1; // Used only for testing efficiency
+    
     private static final String MF = "Matthew";
     private static final String ML = "Huggins";
     private static final String CF = "Caleb";
@@ -37,7 +39,7 @@ public class Scheduler {
         input();
         
         System.out.println("Scheduling courses.");
-        while (attemptsHistory.size() != 10){
+        while (attemptsHistory.size() != runTimes){
             attemptsHistory.add(schedule());
             output();
         }
