@@ -125,8 +125,8 @@ public class Scheduler {
         }
         
         for (Teacher teacher : teachers.values()){
-        	teacher.refresh();
-        	teacher.coursesLeftToSchedule = teacher.coursesToSchedule;
+                teacher.refresh();
+                teacher.coursesLeftToSchedule = teacher.coursesToSchedule;
         }
         
         for (Room room : rooms.values()){
@@ -253,17 +253,17 @@ public class Scheduler {
             setup();
             
             while (!teacherNames.isEmpty()){
-            	String name = teacherNames.get(0);
-            	for (String course : teachers.get(name).getCourses()){
-	                if (!findTimeFor(courses.get(course))){
-	                    Scheduled = false;
-	                    //System.out.println("Failed to fully schedule " + teacherNames.get(0));
-	                    failPoints.put(course, failPoints.get(course) + 1);
-	                }
-            	}
-            	
-				teacherNames.remove(0);
-				teacherNames = qsort(teacherNames);
+                String name = teacherNames.get(0);
+                for (String course : teachers.get(name).getCourses()){
+                    if (!findTimeFor(courses.get(course))){
+                        Scheduled = false;
+                        System.out.println("Failed to fully schedule " + teacherNames.get(0));
+                        failPoints.put(course, failPoints.get(course) + 1);
+                    }
+                }
+            
+                teacherNames.remove(0);
+                teacherNames = qsort(teacherNames);
             }
             
             attempts += 1;
@@ -282,7 +282,11 @@ public class Scheduler {
         }
         
         for (Teacher teacher : teachers.values()){
-        	Output.writeSch(teacher.sch.schedule, "schedules/teachers/" + teacher.name);
+            Output.writeSch(teacher.sch.schedule, "schedules/teachers/" + teacher.name);
+        }
+        
+        for (Room room : rooms.values()){
+        	Output.writeSch(room.sch.schedule, "schedules/rooms/" + room.name);
         }
     }
     
