@@ -119,7 +119,7 @@ public class Scheduler {
         /* Reset all courses, rooms, and people */
         for (Person person : people.values()){
             person.sch.refresh();
-            person.coursesLeftToSchedule = person.coursesToSchedule;
+            person.coursesLeftToSchedule = person.totalCourses;
         }
         
         for (Room room : rooms.values()){
