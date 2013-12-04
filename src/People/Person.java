@@ -7,7 +7,7 @@ public abstract class Person {
     public Schedule sch = new Schedule();
     public String name; // Full name, (First M Last)
     
-    public int coursesToSchedule = 0;
+    public int totalCourses = 0;
     public int coursesLeftToSchedule = 0;
     
     public Person(String name){
@@ -15,7 +15,7 @@ public abstract class Person {
     }
     
     public void addCoursesToSchedule(int freq){
-        coursesToSchedule += freq;
+        totalCourses += freq;
         coursesLeftToSchedule += freq;
     }
 }
