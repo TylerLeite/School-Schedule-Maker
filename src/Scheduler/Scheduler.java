@@ -286,4 +286,53 @@ public class Scheduler {
         }
     }
     
+    public static void shuffle(Course course) {
+    	//pre-condition: this is an arts class
+    	//pre-condition: all arts classes are of the form: Classtype + level of class (ordered)
+    	String name = course.name;
+    	int courselevel = Integer.parseInt(name);
+    	String[] namesarray = name.split("" + courselevel);
+    	String classtype = namesarray[0];
+    	boolean oneAbove = courses.containsKey(classtype + (courselevel + 1));
+    	boolean oneBelow = courses.containsKey(classtype + (courselevel - 1));
+    	if (oneAbove && oneBelow) {
+    		Course coursebelow = courses.get(classtype + (courselevel - 1));
+    		Course courseabove = courses.get(classtype + (courselevel + 1));
+    		actuallyshuffle(course, coursebelow, courseabove);
+    		}
+    	else if (oneAbove) {
+    		Course courseabove = courses.get(classtype + (courselevel + 1));
+    		Course coursetwoabove = courses.get(classtype + (courselevel + 2));
+    		actuallyshuffle(course, courseabove, coursetwoabove);
+    	}
+    	else {
+    		Course coursebelow = courses.get(classtype + (courselevel - 1));
+    		Course coursetwobelow = courses.get(classtype + (courselevel - 2));
+    		actuallyshuffle(course, coursebelow, coursetwobelow);
+    	}
+    		
+    }
+    public static void actuallyshuffle(Course course1, Course course2, Course course3) {
+    	ArrayList<String> allthestudents = new ArrayList<String>();
+    	Course[] classes = {course1, course2, course3};
+    	
+    	String teachname;
+    	//removes all students (leaves the teacher) from courses, and adds to allthestudents
+    	for (int i = 0; i < classes.length; i++) {
+    		teachname = classes[i].people.get(0);
+        	allthestudents.addAll(classes[i].people);
+        	allthestudents.remove(teachname);
+        	classes[i].people.clear();
+        	classes[i].people.add(teachname);
+    	}
+    	
+    	int totalstudents = allthestudents.size();
+    	for (int i = 0; i < totalstudents; i++) {
+    		int randomindex = (int) (Math.random() * allthestudents.size());
+    		int randomcourse = (int) (Math.random() * classes.length);
+    		classes[randomcourse].people.add(allthestudents.get(randomindex));
+    		allthestudents.remove(randomindex);
+    	}
+    }
+    
 }
