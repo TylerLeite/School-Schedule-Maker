@@ -337,3 +337,18 @@ public class Scheduler {
     
 }
 
+/*//
+	For the course shuffling:
+		when an arts course fails:
+			look through the students and see who shares the most courses
+			group them together that way
+			if there is a vast majority (>70%):
+				move the outliers into a new part based on shared courses
+				if a part would be too small, shift up or down a level, based again on course sharing
+			if there is no majority:
+				first try to split courses up into parts, e.g. 3a, 3b, 3c
+				then try to move people up or down 1 course from their original one
+			
+			This can get very slow and inefficient, so we may need to keep a 
+			master list of what classes are most common among each arts level
+//*/
