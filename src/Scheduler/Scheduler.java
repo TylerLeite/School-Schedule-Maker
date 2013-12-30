@@ -43,6 +43,7 @@ public class Scheduler {
             attemptsHistory.add(schedule());
             output();
         }
+        
         int avgAttempts = 0;
         for (int i=0; i < attemptsHistory.size(); i++)
             avgAttempts += attemptsHistory.get(i);
@@ -246,47 +247,48 @@ public class Scheduler {
     	/* Loop through students and see who shares the most courses */
     	HashMap<String, HashMap<String, Integer>> imTheMap = new HashMap<String, HashMap<String, Integer>>();
     	for (String student : courses.get(course).getStudents()){
-    		entry = new HashMap<String, Integer>();
+    		HashMap<String, Integer> entry = new HashMap<String, Integer>();
     		
     		for (String subStudent : courses.get(course).getStudents()){
-    			if (imTheMap.contains(subStudent)){
+    			if (imTheMap.containsKey(subStudent)){
     				/* Optimization: reuse results if we can */
-    				entry.put(substudent, imTheMap.get(subStudent).get(student));
+    				entry.put(subStudent, imTheMap.get(subStudent).get(student));
     			} else {
     				for (Course c : courses.values()){
     					if (c.getStudents().contains(student)){
     						if (c.getStudents().contains(subStudent)){
-    							if (entry.contains(substudent))
-    								entry.put(substudent, entry.get(substudent) + 1)
+    							if (entry.containsKey(subStudent))
+    								entry.put(subStudent, entry.get(subStudent) + 1);
     							else
-									entry.put(substudent, 1);
+									entry.put(subStudent, 1);
     						}
     					}
     				}
     			}
     		}
     		
-    		HashMap.put(student, entry);
+    		imTheMap.put(student, entry);
     	}
     	
     	return imTheMap;
     }
     
-    protected static void optimizeArts(HashMap<String, HashMap<String, Integer>> map){
+    protected static ArrayList<ArrayList<String>> optimizeArts(HashMap<String, HashMap<String, Integer>> map){
     	/* Arrange students into groups based on information from the connection map */
     	
     	ArrayList<ArrayList<String>> blubblub = new ArrayList<ArrayList<String>>(); // Because there is a kind of fish called a grouper
     	
+    	return blubblub;
     	//
     }
     
-    protected static boolean move(string studentName, String oldCourse, String direction = "random"){
+    protected static boolean move(String studentName, String oldCourse, String direction){
     	/* TODO: Add the ability to mark arts courses as "immutable" */
     	/* Remove student studentName from course oldCourse and add it to the
     	 * course that is one higher or one lower as specified. */
     	
     	courses.get(oldCourse).people.remove(studentName);
-    	int lvl = Integer.parseInt(courseName.replaceAll("\\D+", "")); // Extract the level from the course's title
+    	int lvl = Integer.parseInt(oldCourse.replaceAll("\\D+", "")); // Extract the level from the course's title
     	
     	if (direction.equals("up"))
     		lvl++;
@@ -295,7 +297,7 @@ public class Scheduler {
     	else
     		return false;
     	
-    	courseName = courseName.replaceAll("\\D*$", lvl);
+    	oldCourse = oldCourse.replaceAll("\\D*$", Integer.toString(lvl));
     	courses.get(oldCourse).addPerson(studentName);
     	
     	return true;
@@ -303,7 +305,7 @@ public class Scheduler {
     
     protected static void actuallyShuffle(String course, ArrayList<ArrayList<String>> groups){
     	int max = 0;
-    	ArrayList<String> maxGroup;
+    	ArrayList<String> maxGroup = new ArrayList<String>();
     	
     	for (ArrayList<String> group : groups){
     		if (group.size() > max){
@@ -330,7 +332,7 @@ public class Scheduler {
     
     protected static void shuffle(String course){
     	HashMap<String, HashMap<String, Integer>> conMap = getConnectionMap(course);
-    	ArrayList<ArrayList<String>> groups = omptimizeArts(conMap);
+    	ArrayList<ArrayList<String>> groups = optimizeArts(conMap);
     	actuallyShuffle(course, groups);
     }
     
@@ -384,19 +386,3 @@ public class Scheduler {
         }
     }
 }
-
-/*//
-	For the course shuffling:
-		when an arts course fails:
-			+look through the students and see who shares the most courses
-			group them together that way
-			if there is a vast majority (>70%):
-				move the outliers into a new part based on shared courses
-				if a part would be too small, shift up or down a level, based again on course sharing
-			if there is no majority:
-				first try to split courses up into parts, e.g. 3a, 3b, 3c
-				then try to move people up or down 1 course from their original one
-			
-			This can get very slow and inefficient, so we may need to keep a 
-			master list of what classes are most common among each arts level
-//*/
