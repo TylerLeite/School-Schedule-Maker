@@ -93,21 +93,7 @@ public class Input {
             if (!Scheduler.people.containsKey(student))
                 Scheduler.people.put(student, new Student(student));
             course.addPerson(student);
-            Scheduler.people.get(student).addCoursesToSchedule(course.freq);
-        	/* Students keep track of what level of arts classes they take. */
-            if (courseName.contains("Art")){
-            	int courseLvl = Integer.parseInt(courseName.replaceAll("\\D+", "")); // Extract the level from the course's title
-            	Scheduler.people.get(student).artsLevels.put("Art", courseLvl);
-            } else if (courseName.contains("Dance")){
-            	int courseLvl = Integer.parseInt(courseName.replaceAll("\\D+", ""));
-            	Scheduler.people.get(student).artsLevels.put("Dance", courseLvl);
-            } else if (courseName.contains("Music")){
-            	int courseLvl = Integer.parseInt(courseName.replaceAll("\\D+", ""));
-            	Scheduler.people.get(student).artsLevels.put("Music", courseLvl);
-            } else if (courseName.contains("Theater")){
-            	int courseLvl = Integer.parseInt(courseName.replaceAll("\\D+", ""));
-            	Scheduler.people.get(student).artsLevels.put("Theater", courseLvl);
-            }
+            Scheduler.people.get(student).addCoursesToSchedule(course.freq);    
         }
     }
     

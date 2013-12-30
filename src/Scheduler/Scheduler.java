@@ -236,6 +236,104 @@ public class Scheduler {
         }
     }
     
+    protected static HashMap<String, HashMap<String, Integer>> getConnectionMap(String course){
+    	/* NOTE: Can be made faster by making students keep track of what classes
+    	 * they are in. This can be done by adding to a list when the courses
+    	 * are being created and then changing it in this part (shuffling). I
+    	 * am going to be optimizing after I am sure everything works, so for now
+    	 * it will stay as is. */
+    	
+    	/* Loop through students and see who shares the most courses */
+    	HashMap<String, HashMap<String, Integer>> imTheMap = new HashMap<String, HashMap<String, Integer>>();
+    	for (String student : courses.get(course).getStudents()){
+    		entry = new HashMap<String, Integer>();
+    		
+    		for (String subStudent : courses.get(course).getStudents()){
+    			if (imTheMap.contains(subStudent)){
+    				/* Optimization: reuse results if we can */
+    				entry.put(substudent, imTheMap.get(subStudent).get(student));
+    			} else {
+    				for (Course c : courses.values()){
+    					if (c.getStudents().contains(student)){
+    						if (c.getStudents().contains(subStudent)){
+    							if (entry.contains(substudent))
+    								entry.put(substudent, entry.get(substudent) + 1)
+    							else
+									entry.put(substudent, 1);
+    						}
+    					}
+    				}
+    			}
+    		}
+    		
+    		HashMap.put(student, entry);
+    	}
+    	
+    	return imTheMap;
+    }
+    
+    protected static void optimizeArts(HashMap<String, HashMap<String, Integer>> map){
+    	/* Arrange students into groups based on information from the connection map */
+    	
+    	ArrayList<ArrayList<String>> blubblub = new ArrayList<ArrayList<String>>(); // Because there is a kind of fish called a grouper
+    	
+    	//
+    }
+    
+    protected static boolean move(string studentName, String oldCourse, String direction = "random"){
+    	/* TODO: Add the ability to mark arts courses as "immutable" */
+    	/* Remove student studentName from course oldCourse and add it to the
+    	 * course that is one higher or one lower as specified. */
+    	
+    	courses.get(oldCourse).people.remove(studentName);
+    	int lvl = Integer.parseInt(courseName.replaceAll("\\D+", "")); // Extract the level from the course's title
+    	
+    	if (direction.equals("up"))
+    		lvl++;
+    	else if (direction.equals("down"))
+    		lvl--;
+    	else
+    		return false;
+    	
+    	courseName = courseName.replaceAll("\\D*$", lvl);
+    	courses.get(oldCourse).addPerson(studentName);
+    	
+    	return true;
+    }
+    
+    protected static void actuallyShuffle(String course, ArrayList<ArrayList<String>> groups){
+    	int max = 0;
+    	ArrayList<String> maxGroup;
+    	
+    	for (ArrayList<String> group : groups){
+    		if (group.size() > max){
+    			max = group.size();
+    			maxGroup = group;
+    		}
+    	}
+    	
+    	groups.remove(maxGroup);
+    	
+    	String direction;
+    	for (ArrayList<String> group : groups){
+    		/* Randomly select up or down */
+    		if (Math.random() < 0.5)
+    			direction = "up";
+    		else
+    			direction = "down";
+    		
+    		for (String student : group){
+    			move(student, course, direction);
+    		}
+    	}
+    }
+    
+    protected static void shuffle(String course){
+    	HashMap<String, HashMap<String, Integer>> conMap = getConnectionMap(course);
+    	ArrayList<ArrayList<String>> groups = omptimizeArts(conMap);
+    	actuallyShuffle(course, groups);
+    }
+    
     protected static int schedule(){
         /* Start your schedulers! */
         boolean Scheduled = false;
@@ -285,62 +383,12 @@ public class Scheduler {
                 Output.writeSch(person.sch.schedule, "schedules/teachers/" + person.name);
         }
     }
-    
-    public static void shuffle(Course course) {
-    	//pre-condition: this is an arts class
-    	//pre-condition: all arts classes are of the form: Classtype + level of class (ordered)
-    	String name = course.name;
-    	int courselevel = Integer.parseInt(name);
-    	String[] namesarray = name.split("" + courselevel);
-    	String classtype = namesarray[0];
-    	boolean oneAbove = courses.containsKey(classtype + (courselevel + 1));
-    	boolean oneBelow = courses.containsKey(classtype + (courselevel - 1));
-    	if (oneAbove && oneBelow) {
-    		Course coursebelow = courses.get(classtype + (courselevel - 1));
-    		Course courseabove = courses.get(classtype + (courselevel + 1));
-    		actuallyshuffle(course, coursebelow, courseabove);
-    		}
-    	else if (oneAbove) {
-    		Course courseabove = courses.get(classtype + (courselevel + 1));
-    		Course coursetwoabove = courses.get(classtype + (courselevel + 2));
-    		actuallyshuffle(course, courseabove, coursetwoabove);
-    	}
-    	else {
-    		Course coursebelow = courses.get(classtype + (courselevel - 1));
-    		Course coursetwobelow = courses.get(classtype + (courselevel - 2));
-    		actuallyshuffle(course, coursebelow, coursetwobelow);
-    	}
-    		
-    }
-    public static void actuallyshuffle(Course course1, Course course2, Course course3) {
-    	ArrayList<String> allthestudents = new ArrayList<String>();
-    	Course[] classes = {course1, course2, course3};
-    	
-    	String teachname;
-    	//removes all students (leaves the teacher) from courses, and adds to allthestudents
-    	for (int i = 0; i < classes.length; i++) {
-    		teachname = classes[i].people.get(0);
-        	allthestudents.addAll(classes[i].people);
-        	allthestudents.remove(teachname);
-        	classes[i].people.clear();
-        	classes[i].people.add(teachname);
-    	}
-    	
-    	int totalstudents = allthestudents.size();
-    	for (int i = 0; i < totalstudents; i++) {
-    		int randomindex = (int) (Math.random() * allthestudents.size());
-    		int randomcourse = (int) (Math.random() * classes.length);
-    		classes[randomcourse].people.add(allthestudents.get(randomindex));
-    		allthestudents.remove(randomindex);
-    	}
-    }
-    
 }
 
 /*//
 	For the course shuffling:
 		when an arts course fails:
-			look through the students and see who shares the most courses
+			+look through the students and see who shares the most courses
 			group them together that way
 			if there is a vast majority (>70%):
 				move the outliers into a new part based on shared courses
