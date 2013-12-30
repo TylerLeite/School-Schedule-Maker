@@ -39,12 +39,12 @@ public class Course {
         for (String person : people){
             Person dude = Scheduler.people.get(person);
             if (dude instanceof Teacher){
-                int tCC = dude.coursesToSchedule;
+                int tCC = dude.totalCourses;
                 int tO = dude.sch.openings.size();
                 tResult = 1 - (double)tCC/tO;
                 
             } else {
-                int sCC = dude.coursesToSchedule;
+                int sCC = dude.totalCourses;
                 int sO= dude.sch.openings.size();
                 if (sResult < 1 - (double)sCC/sO)
                     sResult = 1 - (double)sCC/sO;

@@ -1,6 +1,5 @@
 package People;
 
-import java.util.HashMap;
 
 import Schedule.Schedule;
 
