@@ -238,11 +238,7 @@ public class Scheduler {
     }
     
     protected static HashMap<String, HashMap<String, Integer>> getConnectionMap(String course){
-    	/* NOTE: Can be made faster by making students keep track of what classes
-    	 * they are in. This can be done by adding to a list when the courses
-    	 * are being created and then changing it in this part (shuffling). I
-    	 * am going to be optimizing after I am sure everything works, so for now
-    	 * it will stay as is. */
+    	/* TODO: Make student keep track of their own connection maps. */
     	
     	/* Loop through students and see who shares the most courses */
     	HashMap<String, HashMap<String, Integer>> imTheMap = new HashMap<String, HashMap<String, Integer>>();
@@ -273,22 +269,69 @@ public class Scheduler {
     	return imTheMap;
     }
     
-    protected static ArrayList<ArrayList<String>> optimizeArts(HashMap<String, HashMap<String, Integer>> map){
+    protected static ArrayList<ArrayList<String>> optimizeArts(HashMap<String, HashMap<String, Integer>> conMap){
     	/* Arrange students into groups based on information from the connection map */
+    	HashMap<String, ArrayList<String>> blubblub = new HashMap<String, ArrayList<String>>(); // Because there is a kind of fish called a grouper
     	
-    	ArrayList<ArrayList<String>> blubblub = new ArrayList<ArrayList<String>>(); // Because there is a kind of fish called a grouper
+    	/* For each student, generate a list of students who share the most courses with him */
+    	for (String student : conMap.keySet()){
+    		int max = 0;
+    		ArrayList<String> group = new ArrayList<String>();
+    		for (String subStudent : conMap.get(student).keySet()){
+    			int cur = conMap.get(student).get(subStudent).intValue();
+    			if (cur > max){
+    				max = cur;
+    				group = new ArrayList<String>();
+    				group.add(subStudent);
+    			} else if (cur == max){
+    				group.add(subStudent);
+    			}
+    		}
+    		
+    		group.add(student);
+    		blubblub.put(student, group);
+    	}
     	
-    	return blubblub;
-    	//
+    	/* Convert the hashmap to an arraylist of arraylists */
+    	ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
+    	for (ArrayList<String> group : blubblub.values())
+			groups.add(group);
+    	
+    	/* Make sure students appear in exactly one group */
+    	/* TODO: Make this optimize groups for length. */
+    	ArrayList<String> done = new ArrayList<String>();
+    	for (ArrayList<String> group : groups){
+    		ArrayList<String> toRemove = new ArrayList<String>();
+    		for (String student : group){
+    			if (done.contains(student)){
+    				toRemove.add(student);
+    			} else {
+    				done.add(student);
+    			}
+    		}
+    		
+    		for (String student : toRemove){
+    			group.remove(student);
+    		}
+    	}
+    	
+    	return groups;
     }
     
     protected static boolean move(String studentName, String oldCourse, String direction){
+    	/* TODO: Make this actually work. If a course does not exist, create it. */
     	/* TODO: Add the ability to mark arts courses as "immutable" */
-    	/* Remove student studentName from course oldCourse and add it to the
-    	 * course that is one higher or one lower as specified. */
     	
+    	/* Remove student studentName from course oldCourse and add it to the course that is 
+    	 * one higher or one lower as specified */
     	courses.get(oldCourse).people.remove(studentName);
-    	int lvl = Integer.parseInt(oldCourse.replaceAll("\\D+", "")); // Extract the level from the course's title
+    	String[] parts = oldCourse.split(" ");
+    	
+    	String subLvl = parts[parts.length - 1].replaceAll("[0-9]","");
+    	
+    	String tmpInt = parts[parts.length - 1].replace("[a-zA-Z]*", "");
+    	System.out.println(tmpInt);
+    	int lvl = Integer.parseInt(tmpInt); // Extract the level from the course's title
     	
     	if (direction.equals("up"))
     		lvl++;
@@ -297,13 +340,19 @@ public class Scheduler {
     	else
     		return false;
     	
-    	oldCourse = oldCourse.replaceAll("\\D*$", Integer.toString(lvl));
-    	courses.get(oldCourse).addPerson(studentName);
+    	System.out.println(oldCourse);
+    	String newCourse = oldCourse.split("[0-9]*")[0] + lvl + subLvl;
+    	System.out.println(newCourse);
+    	courses.get(newCourse).addPerson(studentName);
     	
     	return true;
     }
     
     protected static void actuallyShuffle(String course, ArrayList<ArrayList<String>> groups){
+    	/* Keep the largest group of students in the current spot, then move the other groups
+    	 * to new courses. */
+    	
+    	/* TODO: Add the ability to create new courses rather than just moving people around. */
     	int max = 0;
     	ArrayList<String> maxGroup = new ArrayList<String>();
     	
@@ -362,6 +411,22 @@ public class Scheduler {
             }
             
             attempts += 1;
+            
+            if (attempts % 10 == 0){
+            	for (String course : failPoints.keySet()){
+            		/* TODO: keep track of a list of arts classes 
+            		 * and loop through that instead of all courses. */
+            		if ((course.contains("Dance") || course.contains("Art") || 
+            			course.contains("Music") || course.contains("Theater")) &&
+            			!course.contains("Theory") && !course.contains("History")){
+            		
+	            		if (failPoints.get(course).intValue() > 6){
+	            			failPoints.put(course, 0);
+	            			shuffle(course);
+	            		}
+            		}
+            	}
+            }
         }
         
 
