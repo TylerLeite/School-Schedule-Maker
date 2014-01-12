@@ -23,7 +23,9 @@ public class Scheduler {
     
     public static HashMap<String, Integer> failPoints = new HashMap<String, Integer>();
     public static ArrayList<String> courseNames = new ArrayList<String>();
+    public static ArrayList<String> artNames    = new ArrayList<String>();
     public static HashMap<String, Course> courses = new HashMap<String, Course>();
+    public static HashMap<String, Course> arts    = new HashMap<String, Course>();
     public static HashMap<String, Person> people  = new HashMap<String, Person>();
     public static HashMap<String, Room>   rooms   = new HashMap<String, Room>();
     
@@ -45,8 +47,10 @@ public class Scheduler {
         }
         
         int avgAttempts = 0;
-        for (int i=0; i < attemptsHistory.size(); i++)
+        for (int i=0; i < attemptsHistory.size(); i++){
             avgAttempts += attemptsHistory.get(i);
+        }
+        
         System.out.println("AVG: " + avgAttempts/attemptsHistory.size());
        
         System.out.println("Outputting schedules");
@@ -68,12 +72,13 @@ public class Scheduler {
             double pPriority = courses.get(pivot).priority;
             for (int i = 0; i < list.size(); i++){
                 double iPriority = courses.get(list.get(i)).priority;
-                if (iPriority < pPriority)
+                if (iPriority < pPriority){
                     LHS.add(list.get(i));
-                else if (iPriority > pPriority)
+                } else if (iPriority > pPriority){
                     RHS.add(list.get(i));
-                else 
+                } else { 
                     PIV.add(list.get(i));
+                }
             }
             
             ArrayList<String> sorted = new ArrayList<String>();
@@ -91,16 +96,18 @@ public class Scheduler {
         /* Make sure the teachers all exist before you start trying to restrict them. */
         for (File child : dir.listFiles()){
             String fname = child.getAbsolutePath();
-            if (fname.contains(Input.crsFEnd))
+            if (fname.contains(Input.crsFEnd)){
                 Input.parseCrsFile(fname);
+            }
         }
         
         courseNames = new ArrayList<String>(courses.keySet());
         
         for (File child : dir.listFiles()){
             String fname = child.getAbsolutePath();
-            if (fname.contains(Input.tchFEnd))
+            if (fname.contains(Input.tchFEnd)){
                 Input.parseTchFile(fname);
+            }
         }
     }
     
@@ -204,11 +211,13 @@ public class Scheduler {
                             ArrayList<Opening> viable = new ArrayList<Opening>();
                             for (Opening ope : openings){
                                 if (!repeatDays){
-                                    if (ope.day != opening.day)
+                                    if (ope.day != opening.day){
                                         viable.add(ope);
+                                    }
                                 } else {
-                                    if (ope.day != opening.day || ope.time != opening.time)
+                                    if (ope.day != opening.day || ope.time != opening.time){
                                         viable.add(ope);
+                                    }
                                 }
                             }
                             
@@ -219,8 +228,9 @@ public class Scheduler {
                 }
             }
 
-            if (!Found)
+            if (!Found){
                 return false;
+            }
         }
         
         return Found;
@@ -237,154 +247,7 @@ public class Scheduler {
         }
     }
     
-    protected static HashMap<String, HashMap<String, Integer>> getConnectionMap(String course){
-    	/* TODO: Make student keep track of their own connection maps. */
-    	
-    	/* Loop through students and see who shares the most courses */
-    	HashMap<String, HashMap<String, Integer>> imTheMap = new HashMap<String, HashMap<String, Integer>>();
-    	for (String student : courses.get(course).getStudents()){
-    		HashMap<String, Integer> entry = new HashMap<String, Integer>();
-    		
-    		for (String subStudent : courses.get(course).getStudents()){
-    			if (imTheMap.containsKey(subStudent)){
-    				/* Optimization: reuse results if we can */
-    				entry.put(subStudent, imTheMap.get(subStudent).get(student));
-    			} else {
-    				for (Course c : courses.values()){
-    					if (c.getStudents().contains(student)){
-    						if (c.getStudents().contains(subStudent)){
-    							if (entry.containsKey(subStudent))
-    								entry.put(subStudent, entry.get(subStudent) + 1);
-    							else
-									entry.put(subStudent, 1);
-    						}
-    					}
-    				}
-    			}
-    		}
-    		
-    		imTheMap.put(student, entry);
-    	}
-    	
-    	return imTheMap;
-    }
-    
-    protected static ArrayList<ArrayList<String>> optimizeArts(HashMap<String, HashMap<String, Integer>> conMap){
-    	/* Arrange students into groups based on information from the connection map */
-    	HashMap<String, ArrayList<String>> blubblub = new HashMap<String, ArrayList<String>>(); // Because there is a kind of fish called a grouper
-    	
-    	/* For each student, generate a list of students who share the most courses with him */
-    	for (String student : conMap.keySet()){
-    		int max = 0;
-    		ArrayList<String> group = new ArrayList<String>();
-    		for (String subStudent : conMap.get(student).keySet()){
-    			int cur = conMap.get(student).get(subStudent).intValue();
-    			if (cur > max){
-    				max = cur;
-    				group = new ArrayList<String>();
-    				group.add(subStudent);
-    			} else if (cur == max){
-    				group.add(subStudent);
-    			}
-    		}
-    		
-    		group.add(student);
-    		blubblub.put(student, group);
-    	}
-    	
-    	/* Convert the hashmap to an arraylist of arraylists */
-    	ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
-    	for (ArrayList<String> group : blubblub.values())
-			groups.add(group);
-    	
-    	/* Make sure students appear in exactly one group */
-    	/* TODO: Make this optimize groups for length. */
-    	ArrayList<String> done = new ArrayList<String>();
-    	for (ArrayList<String> group : groups){
-    		ArrayList<String> toRemove = new ArrayList<String>();
-    		for (String student : group){
-    			if (done.contains(student)){
-    				toRemove.add(student);
-    			} else {
-    				done.add(student);
-    			}
-    		}
-    		
-    		for (String student : toRemove){
-    			group.remove(student);
-    		}
-    	}
-    	
-    	return groups;
-    }
-    
-    protected static boolean move(String studentName, String oldCourse, String direction){
-    	/* TODO: Make this actually work. If a course does not exist, create it. */
-    	/* TODO: Add the ability to mark arts courses as "immutable" */
-    	
-    	/* Remove student studentName from course oldCourse and add it to the course that is 
-    	 * one higher or one lower as specified */
-    	courses.get(oldCourse).people.remove(studentName);
-    	String[] parts = oldCourse.split(" ");
-    	
-    	String subLvl = parts[parts.length - 1].replaceAll("[0-9]","");
-    	
-    	String tmpInt = parts[parts.length - 1].replace("[a-zA-Z]*", "");
-    	System.out.println(tmpInt);
-    	int lvl = Integer.parseInt(tmpInt); // Extract the level from the course's title
-    	
-    	if (direction.equals("up"))
-    		lvl++;
-    	else if (direction.equals("down"))
-    		lvl--;
-    	else
-    		return false;
-    	
-    	System.out.println(oldCourse);
-    	String newCourse = oldCourse.split("[0-9]*")[0] + lvl + subLvl;
-    	System.out.println(newCourse);
-    	courses.get(newCourse).addPerson(studentName);
-    	
-    	return true;
-    }
-    
-    protected static void actuallyShuffle(String course, ArrayList<ArrayList<String>> groups){
-    	/* Keep the largest group of students in the current spot, then move the other groups
-    	 * to new courses. */
-    	
-    	/* TODO: Add the ability to create new courses rather than just moving people around. */
-    	int max = 0;
-    	ArrayList<String> maxGroup = new ArrayList<String>();
-    	
-    	for (ArrayList<String> group : groups){
-    		if (group.size() > max){
-    			max = group.size();
-    			maxGroup = group;
-    		}
-    	}
-    	
-    	groups.remove(maxGroup);
-    	
-    	String direction;
-    	for (ArrayList<String> group : groups){
-    		/* Randomly select up or down */
-    		if (Math.random() < 0.5)
-    			direction = "up";
-    		else
-    			direction = "down";
-    		
-    		for (String student : group){
-    			move(student, course, direction);
-    		}
-    	}
-    }
-    
-    protected static void shuffle(String course){
-    	HashMap<String, HashMap<String, Integer>> conMap = getConnectionMap(course);
-    	ArrayList<ArrayList<String>> groups = optimizeArts(conMap);
-    	actuallyShuffle(course, groups);
-    }
-    
+
     protected static int schedule(){
         /* Start your schedulers! */
         boolean Scheduled = false;
@@ -396,15 +259,16 @@ public class Scheduler {
             setup();
             
             while (!courseNames.isEmpty()){
-                if (!findTimeFor(courses.get(courseNames.get(0)))){
+            	Course cur = courses.get(courseNames.get(0));
+                if (!findTimeFor(cur)){
                     Scheduled = false;
                     //System.out.println("Failed to fully schedule " + courseNames.get(0));
                     failPoints.put(courseNames.get(0), failPoints.get(courseNames.get(0)) + 1);
                 }
-                
+            
                 courseNames.remove(0);
                 for (Course course : courses.values()){
-                    course.getPriority();
+                		course.getPriority();
                 }
                 
                 courseNames = qsort(courseNames);
@@ -412,42 +276,32 @@ public class Scheduler {
             
             attempts += 1;
             
-            if (attempts % 10 == 0){
-            	for (String course : failPoints.keySet()){
-            		/* TODO: keep track of a list of arts classes 
-            		 * and loop through that instead of all courses. */
-            		if ((course.contains("Dance") || course.contains("Art") || 
-            			course.contains("Music") || course.contains("Theater")) &&
-            			!course.contains("Theory") && !course.contains("History")){
-            		
-	            		if (failPoints.get(course).intValue() > 6){
-	            			failPoints.put(course, 0);
-	            			shuffle(course);
-	            		}
-            		}
-            	}
-            }
+            System.out.println(attempts);
         }
         
 
         System.out.println("Attempts: " + attempts);
-        for (Course course : courses.values())
+        for (Course course : courses.values()){
             Scheduler.failPoints.put(course.name, 0);
+        }
+            
         return attempts;
     }
     
     protected static void output(){
         /* Output all data in its prescribed location. */
-        for (Room room : rooms.values())
+        for (Room room : rooms.values()){
             Output.writeSch(room.sch.schedule, "schedules/rooms/" + room.name);
+        }
         
         for (Person person : people.values()){
-            if (person.sch.openings.size() < 10)
+            if (person.sch.openings.size() < 10){
                 System.out.println(person.name);
-            if (person instanceof Student)
+            } if (person instanceof Student){
                 Output.writeSch(person.sch.schedule, "schedules/students/" + person.name);
-            else
+        	} else {
                 Output.writeSch(person.sch.schedule, "schedules/teachers/" + person.name);
+        	}
         }
     }
 }

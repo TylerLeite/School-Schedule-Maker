@@ -15,6 +15,7 @@ public class Course {
     public String[] roomsByDay = new String[Schedule.D]; // Caleb, you better think of something clever
     public int freq;
     public double priority;
+    public boolean isArt = false;
     
     public Course(String name, int freq){
         this.name = name;
@@ -42,12 +43,12 @@ public class Course {
                 int tCC = dude.totalCourses;
                 int tO = dude.sch.openings.size();
                 tResult = 1 - (double)tCC/tO;
-                
             } else {
                 int sCC = dude.totalCourses;
                 int sO= dude.sch.openings.size();
-                if (sResult < 1 - (double)sCC/sO)
+                if (sResult < 1 - (double)sCC/sO){
                     sResult = 1 - (double)sCC/sO;
+                }
             }
         }
         
@@ -63,16 +64,17 @@ public class Course {
         int teacherOpenings = Scheduler.people.get(getTeacher()).sch.openings.size();
         int priority = 5;
         
-        if (teacherOpenings <= 16)
+        if (teacherOpenings <= 16){
             return 0;
-        else if (roomsSize == 1)
+        } else if (roomsSize == 1){
             priority = 1;
-        else if (teacherOpenings <= 20)
+        } else if (teacherOpenings <= 20){
             priority = 2;
-        else if (roomsSize <= 5 || teacherOpenings <= 26)
+        } else if (roomsSize <= 5 || teacherOpenings <= 26){
             priority = 3;
-        else if (roomsSize <= 10 || teacherOpenings <= 32)
+        } else if (roomsSize <= 10 || teacherOpenings <= 32){
             priority = 4;
+        }
         
         priority *= 1000;
         priority += Math.random()*750;
@@ -82,9 +84,9 @@ public class Course {
     }
     
     public static ArrayList<String> qsort(ArrayList<String> list){
-        if (list.size() == 0)
+        if (list.size() == 0){
             return list;
-        else {
+        } else {
             String pivot = list.get(0);
             ArrayList<String> LHS = new ArrayList<String>();
             ArrayList<String> RHS = new ArrayList<String>();
@@ -93,12 +95,13 @@ public class Course {
             int pPriority = 45 - Scheduler.rooms.get(pivot).sch.openings.size();
             for (int i = 0; i < list.size(); i++){
                 int iPriority = 45 - Scheduler.rooms.get(list.get(i)).sch.openings.size();
-                if (iPriority < pPriority)
+                if (iPriority < pPriority){
                     LHS.add(list.get(i));
-                else if (iPriority > pPriority)
+                } else if (iPriority > pPriority){
                     RHS.add(list.get(i));
-                else 
+                } else {
                     PIV.add(list.get(i));
+                }
             }
             
             ArrayList<String> sorted = new ArrayList<String>();
@@ -115,14 +118,16 @@ public class Course {
     
     public void addRoom(String room){
         /* Add a possible room, used during input. */
-        if (!rooms.contains(room)) //Prevent bugs, Caleb, it's good for you.
+        if (!rooms.contains(room)){ //Prevent bugs, Caleb, it's good for you.
             rooms.add(room);
+        }
     }
     
     public void addPerson(String person){
         /* Add am enrolled student, used during input. */
-        if (!people.contains(person)) //Prevent bugs, Caleb, it's good for you.
+        if (!people.contains(person)){ //Prevent bugs, Caleb, it's good for you.
             people.add(person);
+        }
     }
     
     public String getTeacher(){
@@ -136,8 +141,9 @@ public class Course {
     public ArrayList<String> getStudents(){
         /* Return a list of all students, cast back to Students. */
         ArrayList<String> Students = new ArrayList<String>();
-        for (int i = 1; i < people.size(); i++)
+        for (int i = 1; i < people.size(); i++){
             Students.add(people.get(i));
+        }
         
         return Students;
     }

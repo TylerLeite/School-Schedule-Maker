@@ -1,6 +1,5 @@
 package People;
 
-
 import Schedule.Schedule;
 
 

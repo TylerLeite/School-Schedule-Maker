@@ -63,8 +63,16 @@ public class Input {
         String courseName = rawData[0];
         int freq = Integer.parseInt(rawData[1]);
         Course course = new Course(courseName, freq);
-        Scheduler.courses.put(courseName, course);
         Scheduler.failPoints.put(courseName,  0);
+        /* Store arts separately because they are scheduled after everything else. */
+        if ((courseName.contains("Dance") || courseName.contains("Art") || 
+    			courseName.contains("Music") || courseName.contains("Theater")) &&
+    			!courseName.contains("Theory") && !courseName.contains("History")){
+        	course.isArt = true;
+        	Scheduler.arts.put(courseName, course);
+		} else {
+			Scheduler.courses.put(courseName, course);
+		}
         
         /* Make a new teacher / room / student if and only if the program hasn't seen the 
          * name before. Either way, mark the addition in the course object. */
@@ -90,8 +98,10 @@ public class Input {
         SN.removeAll(Arrays.asList("", null));
         HashSet<String> studentNames = new HashSet<String>(SN);
         for (String student : studentNames){
-            if (!Scheduler.people.containsKey(student))
+            if (!Scheduler.people.containsKey(student)){
                 Scheduler.people.put(student, new Student(student));
+            }
+            
             course.addPerson(student);
             Scheduler.people.get(student).addCoursesToSchedule(course.freq);    
         }
@@ -110,15 +120,17 @@ public class Input {
         
         for (int i = 0; i < openingData.length; i++){
             /* Don't try to remove empty openings, you will get errors. */
-            if (openingData[i].isEmpty())
+            if (openingData[i].isEmpty()){
                 continue;
+            }
 
             String[] dayTime = openingData[i].split(",");
             int day  = Integer.parseInt(dayTime[0]);
             int time = Integer.parseInt(dayTime[1]);
             
-            if (time >= Schedule.LUNCH)
+            if (time >= Schedule.LUNCH){
                 time++;
+            }
             
             Scheduler.people.get(name).sch.restrict(day, time);
             Scheduler.people.get(name).sch.schedule[day][time] = "DNF";
