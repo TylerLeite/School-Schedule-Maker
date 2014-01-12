@@ -250,18 +250,18 @@ public class Scheduler {
 
     protected static int schedule(){
         /* Start your schedulers! */
-        boolean Scheduled = false;
+        boolean Scheduled = false, Academic = false;
         
         /* If at first you don't succeed... */
         int attempts = 0;
-        while (!Scheduled){
-            Scheduled = true;
+        while (!Academic && !Scheduled){
             setup();
             
+            Academic = true;
             while (!courseNames.isEmpty()){
             	Course cur = courses.get(courseNames.get(0));
                 if (!findTimeFor(cur)){
-                    Scheduled = false;
+                    Academic = false;
                     //System.out.println("Failed to fully schedule " + courseNames.get(0));
                     failPoints.put(courseNames.get(0), failPoints.get(courseNames.get(0)) + 1);
                 }
@@ -274,18 +274,41 @@ public class Scheduler {
                 courseNames = qsort(courseNames);
             }
             
+            if (Academic){
+            	Scheduled = true;
+            	
+            	if (!doArts()){
+            		Scheduled = false;
+            	}
+            }
+            
             attempts += 1;
             
             System.out.println(attempts);
         }
         
-
         System.out.println("Attempts: " + attempts);
         for (Course course : courses.values()){
             Scheduler.failPoints.put(course.name, 0);
         }
             
         return attempts;
+    }
+    
+    protected static boolean doArts(){
+		/* Attempt to schedule the arts classes and shuffle students around to make it happen */
+    	
+    	/* 
+    	 * -Try with current classes
+    	 * -If that fails, try just scheduling the most restricted student in each course
+    	 * and make sub-classes out of the old class based on shared openings with that
+    	 * student IF the class if big enough (probably an 8-10 min)
+    	 * -If that fails or the class is too small, start moving the most restricted
+    	 * students up or down based on who they share the most classes with.
+    	 * -If that fails, try the other direction
+    	 * -If that fails, return false and start completely over
+    	 */
+		return true;
     }
     
     protected static void output(){
