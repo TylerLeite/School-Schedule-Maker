@@ -37,15 +37,14 @@ public class Course {
         int teachernom = Scheduler.people.get(people.get(0)).coursesLeftToSchedule;
         double teacherratio = 1 - (double)teachernom/teacherdenom; // always 0 <= ratio <= 1
         // when nom/denom is closer to 1, the more filled up, so we 1 - it
-        double maxstudentratio = 1; //max meaning most prioritized
+        double totalstudentratioproducts = 1; //
         for (String person : people){
         	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
         	int studentCourseCount = Scheduler.people.get(person).coursesLeftToSchedule;
-        	double studentratio = 1 - (double)studentCourseCount/studentOpenings;
-        	if (maxstudentratio > studentratio)
-        		maxstudentratio = studentratio;
+        	double studentratioproduct = 1 - (double)studentCourseCount/studentOpenings;
+        	maxstudentratio *= studentratioproduct;
         }
-        result = teacherratio * maxstudentratio;
+        result = teacherratio * totalstudentratioproducts;
         //result /= people.size();
         result *= Math.pow(.9, Scheduler.failPoints.get(name));
         //10% more priority each fail-time
