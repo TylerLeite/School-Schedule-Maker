@@ -31,8 +31,29 @@ public class Course {
         /* Return course name, room name, and teacher name for output. */
         return String.format("%s with %s in %s", name, people.get(0), roomsByDay[day]);
     }
-
-    public void getPriority(){ //Good work, Caleb!
+    public void getPriority(){
+        double result = 1;
+        int teacherdenom = Scheduler.people.get(people.get(0)).sch.openings.size();
+        int teachernom = Scheduler.people.get(people.get(0)).coursesLeftToSchedule;
+        double teacherratio = 1 - (double)teachernom/teacherdenom; // always 0 <= ratio <= 1
+        // when nom/denom is closer to 1, the more filled up, so we 1 - it
+        double maxstudentratio = 1; //max meaning most prioritized
+        for (String person : people){
+        	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
+        	int studentCourseCount = Scheduler.people.get(person).coursesLeftToSchedule;
+        	double studentratio = 1 - (double)studentCourseCount/studentOpenings;
+        	if (maxstudentratio > studentratio)
+        		maxstudentratio = studentratio;
+        }
+        result = teacherratio * maxstudentratio;
+        //result /= people.size();
+        result *= Math.pow(.9, Scheduler.failPoints.get(name));
+        //10% more priority each fail-time
+        
+        priority = result;// + Math.random();
+    }
+    
+    public void getPriorityOld(){ //Good work, Caleb!
         /* Implemented as a setter so randomness in priority doesn't mess with qsort */
         double sResult = 1;
         double tResult = 1;
