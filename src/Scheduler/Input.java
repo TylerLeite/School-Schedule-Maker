@@ -64,14 +64,15 @@ public class Input {
         int freq = Integer.parseInt(rawData[1]);
         Course course = new Course(courseName, freq);
         Scheduler.failPoints.put(courseName,  0);
+        Scheduler.courses.put(courseName, course);
         /* Store arts separately because they are scheduled after everything else. */
         if ((courseName.contains("Dance") || courseName.contains("Art") || 
     			courseName.contains("Music") || courseName.contains("Theater")) &&
     			!courseName.contains("Theory") && !courseName.contains("History")){
         	course.isArt = true;
-        	Scheduler.arts.put(courseName, course);
+        	Scheduler.artNamesBak.add(courseName);
 		} else {
-			Scheduler.courses.put(courseName, course);
+			Scheduler.courseNamesBak.add(courseName);
 		}
         
         /* Make a new teacher / room / student if and only if the program hasn't seen the 

@@ -4,9 +4,6 @@ import java.util.ArrayList;
 
 import Scheduler.Scheduler;
 import Schedule.Schedule;
-import People.Person;
-import People.Teacher;
-
 
 public class Course {
     public String name;
@@ -31,76 +28,20 @@ public class Course {
         /* Return course name, room name, and teacher name for output. */
         return String.format("%s with %s in %s", name, people.get(0), roomsByDay[day]);
     }
-    public void getPriority(){
-        double result = 1;
-        int teacherdenom = Scheduler.people.get(people.get(0)).sch.openings.size();
-        int teachernom = Scheduler.people.get(people.get(0)).coursesLeftToSchedule;
-        double teacherratio = 1 - (double)teachernom/teacherdenom; // always 0 <= ratio <= 1
-        // when nom/denom is closer to 1, the more filled up, so we 1 - it
-        double totalstudentratioproducts = 1; //
-        for (String person : people){
-        	int studentOpenings = Scheduler.people.get(person).sch.openings.size();
-        	int studentCourseCount = Scheduler.people.get(person).coursesLeftToSchedule;
-        	double studentratioproduct = 1 - (double)studentCourseCount/studentOpenings;
-        	maxstudentratio *= studentratioproduct;
-        }
-        result = teacherratio * totalstudentratioproducts;
-        //result /= people.size();
-        result *= Math.pow(.9, Scheduler.failPoints.get(name));
-        //10% more priority each fail-time
+    
+    public void getPriority(){ //Good work, Caleb!
+    	/* Implemented as a setter so randomness in priority doesn't mess with qsort */
+
+    	double result = 1;
+        int teacherDenom = Scheduler.people.get(people.get(0)).sch.openings.size();
+        int teacherNum = Scheduler.people.get(people.get(0)).coursesLeftToSchedule;
+        
+        // When num/denom is closer to 1, the more filled up, so we "1 -" it
+        double teacherRatio = 1 - (double)teacherNum/teacherDenom; // Always 0 <= ratio <= 1
+        result = teacherRatio * Math.pow(.9, Scheduler.failPoints.get(name)); //10% more priority each fail-time
+ 
         
         priority = result;// + Math.random();
-    }
-    
-    public void getPriorityOld(){ //Good work, Caleb!
-        /* Implemented as a setter so randomness in priority doesn't mess with qsort */
-        double sResult = 1;
-        double tResult = 1;
-        
-        for (String person : people){
-            Person dude = Scheduler.people.get(person);
-            if (dude instanceof Teacher){
-                int tCC = dude.totalCourses;
-                int tO = dude.sch.openings.size();
-                tResult = 1 - (double)tCC/tO;
-            } else {
-                int sCC = dude.totalCourses;
-                int sO= dude.sch.openings.size();
-                if (sResult < 1 - (double)sCC/sO){
-                    sResult = 1 - (double)sCC/sO;
-                }
-            }
-        }
-        
-        //sResult /= people.size();
-        double result = tResult * sResult;
-        result *= Math.pow(0.1, Scheduler.failPoints.get(name));
-        
-        priority = result;
-    }
-    
-    public int getPriorityOld(){
-        int roomsSize = rooms.size();
-        int teacherOpenings = Scheduler.people.get(getTeacher()).sch.openings.size();
-        int priority = 5;
-        
-        if (teacherOpenings <= 16){
-            return 0;
-        } else if (roomsSize == 1){
-            priority = 1;
-        } else if (teacherOpenings <= 20){
-            priority = 2;
-        } else if (roomsSize <= 5 || teacherOpenings <= 26){
-            priority = 3;
-        } else if (roomsSize <= 10 || teacherOpenings <= 32){
-            priority = 4;
-        }
-        
-        priority *= 1000;
-        priority += Math.random()*750;
-        priority -= Scheduler.failPoints.get(name);
-        
-        return priority;
     }
     
     public static ArrayList<String> qsort(ArrayList<String> list){

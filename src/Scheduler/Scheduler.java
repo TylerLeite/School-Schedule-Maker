@@ -22,10 +22,11 @@ public class Scheduler {
     private static final String CL = "Shapiro";
     
     public static HashMap<String, Integer> failPoints = new HashMap<String, Integer>();
-    public static ArrayList<String> courseNames = new ArrayList<String>();
-    public static ArrayList<String> artNames    = new ArrayList<String>();
+    public static ArrayList<String> courseNamesBak = new ArrayList<String>();
+    public static ArrayList<String> artNamesBak    = new ArrayList<String>();
+    public static ArrayList<String> courseNames    = new ArrayList<String>();
+    public static ArrayList<String> artNames       = new ArrayList<String>();
     public static HashMap<String, Course> courses = new HashMap<String, Course>();
-    public static HashMap<String, Course> arts    = new HashMap<String, Course>();
     public static HashMap<String, Person> people  = new HashMap<String, Person>();
     public static HashMap<String, Room>   rooms   = new HashMap<String, Room>();
     
@@ -140,8 +141,12 @@ public class Scheduler {
         }
         
         /* Queue classes based on priority. */
-        courseNames = new ArrayList<String>(courses.keySet());
+        courseNames = new ArrayList<String>(courseNamesBak);
         courseNames = qsort(courseNames);
+        
+        artNames = new ArrayList<String>(artNamesBak);
+        artNames = qsort(artNames);
+        
         
         /* Shh! */
         //calebAndMatthewClaws();
@@ -250,18 +255,18 @@ public class Scheduler {
 
     protected static int schedule(){
         /* Start your schedulers! */
-        boolean Scheduled = false, Academic = false;
+        boolean Scheduled = false;
         
         /* If at first you don't succeed... */
         int attempts = 0;
-        while (!Academic && !Scheduled){
+        while (!Scheduled){
             setup();
             
-            Academic = true;
+            Scheduled = true;
             while (!courseNames.isEmpty()){
             	Course cur = courses.get(courseNames.get(0));
                 if (!findTimeFor(cur)){
-                    Academic = false;
+                    Scheduled = false;
                     //System.out.println("Failed to fully schedule " + courseNames.get(0));
                     failPoints.put(courseNames.get(0), failPoints.get(courseNames.get(0)) + 1);
                 }
@@ -274,12 +279,8 @@ public class Scheduler {
                 courseNames = qsort(courseNames);
             }
             
-            if (Academic){
-            	Scheduled = true;
-            	
-            	if (!doArts()){
-            		Scheduled = false;
-            	}
+            if (Scheduled){
+            	Scheduled = doArts();
             }
             
             attempts += 1;
@@ -308,6 +309,7 @@ public class Scheduler {
     	 * -If that fails, try the other direction
     	 * -If that fails, return false and start completely over
     	 */
+    	
 		return true;
     }
     
