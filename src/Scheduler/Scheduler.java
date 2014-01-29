@@ -297,6 +297,15 @@ public class Scheduler {
     }
     
     protected static boolean doArts(){
+    	boolean Scheduled = true;
+    	if (artsAttempt()) {
+    		return Scheduled;
+    	}
+    	else {
+    		shufflearts();
+    		Scheduled = artsAttempts();
+    	}
+    	
 		/* Attempt to schedule the arts classes and shuffle students around to make it happen */
     	
     	/* 
@@ -310,7 +319,30 @@ public class Scheduler {
     	 * -If that fails, return false and start completely over
     	 */
     	
-		return true;
+	return Scheduled;
+    }
+    
+    protected static void shufflearts() {
+    	boolean needtopoop = true;
+    }
+    
+    protected static boolean artsAttempt() {
+    	boolean Scheduled = true;
+    	while (!artNames.isEmpty()){
+                    Course cur = courses.get(artNames.get(0));
+                if (!findTimeFor(cur)){
+                    Scheduled = false;
+                    //System.out.println("Failed to fully schedule " + artNames.get(0));
+                    failPoints.put(artNames.get(0), failPoints.get(artNames.get(0)) + 1);
+                }
+            
+                artNames.remove(0);
+                for (Course course : courses.values()){
+                                course.getPriority();
+                }
+                
+                artNames = qsort(artNames);
+            }
     }
     
     protected static void output(){
