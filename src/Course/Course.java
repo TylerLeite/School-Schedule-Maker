@@ -10,9 +10,10 @@ public class Course {
     public ArrayList<String> people = new ArrayList<String>(); // Important that teacher is 1st element!
     public ArrayList<String> rooms  = new ArrayList<String>();
     public String[] roomsByDay = new String[Schedule.D]; // Caleb, you better think of something clever
+    public String[] roomsByDayBak = new String[Schedule.D];
     public int freq;
     public double priority;
-    public boolean isArt = false;
+    public boolean isMutable = false;
     
     public Course(String name, int freq){
         this.name = name;
@@ -42,6 +43,22 @@ public class Course {
  
         
         priority = result;// + Math.random();
+    }
+    
+    public String getMostRestrictedStudent(){
+    	String mostRestrictedStudent = "ERR404";
+    	double mostRestrictedStudentRestriction = 1;
+    	for (String stud : getStudents()){
+    		int studentDenom = Scheduler.people.get(stud).sch.openings.size();
+	        int studentNom   = Scheduler.people.get(stud).coursesLeftToSchedule;
+	        double result = 1 - studentNom/studentDenom;
+	        if (result < mostRestrictedStudentRestriction){
+	        	mostRestrictedStudentRestriction = result;
+	        	mostRestrictedStudent = stud;
+	        }
+    	}
+    	
+    	return mostRestrictedStudent;
     }
     
     public static ArrayList<String> qsort(ArrayList<String> list){
@@ -89,6 +106,10 @@ public class Course {
         if (!people.contains(person)){ //Prevent bugs, Caleb, it's good for you.
             people.add(person);
         }
+    }
+    
+    public void removePerson(String person){
+    	people.remove(person);
     }
     
     public String getTeacher(){

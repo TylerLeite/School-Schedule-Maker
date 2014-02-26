@@ -66,10 +66,9 @@ public class Input {
         Scheduler.failPoints.put(courseName,  0);
         Scheduler.courses.put(courseName, course);
         /* Store arts separately because they are scheduled after everything else. */
-        if ((courseName.contains("Dance") || courseName.contains("Art") || 
-    			courseName.contains("Music") || courseName.contains("Theater")) &&
-    			!courseName.contains("Theory") && !courseName.contains("History")){
-        	course.isArt = true;
+        //boolean mutable = rawData[5].equals("mutable");
+        if (isArt(courseName)){
+        	course.isMutable = true;
         	Scheduler.artNamesBak.add(courseName);
 		} else {
 			Scheduler.courseNamesBak.add(courseName);
@@ -137,4 +136,31 @@ public class Input {
             Scheduler.people.get(name).sch.schedule[day][time] = "DNF";
         }
     }
+    
+    static public boolean isArt(String courseName){
+    	if (courseName.contains("Theory") || courseName.contains("History")){
+    		return false;
+    	} else if (Scheduler.musicIsArt && courseName.contains("Music")){
+    		return true;
+    	} else if (Scheduler.danceIsArt && courseName.contains("Dance")) {
+    		return true;
+    	} else if (Scheduler.artIsArt && courseName.contains("Art")) {
+    		return true;
+    	} else if (Scheduler.theaterIsArt && courseName.contains("Theater")) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }
+    
 }
+
+
+/*
+ if ((courseName.contains("Dance") || courseName.contains("Art") || 
+	  courseName.contains("Music") || courseName.contains("Theater")) &&
+	  !courseName.contains("Theory") && !courseName.contains("History")){
+		course.isArt = true;
+		Scheduler.artNamesBak.add(courseName);
+ }
+ */

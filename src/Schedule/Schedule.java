@@ -14,28 +14,38 @@ public class Schedule {
     public HashSet<Opening> openings = new HashSet<Opening>();
     public String[][] schedule = new String[D][T];
     
+    public HashSet<Opening> openingsBak = new HashSet<Opening>();
+    public String[][] scheduleBak = new String[D][T];
+    
     public Schedule(){
         /* Initialize everything to "" so you don't have to deal with null. */
         for (int i = 0; i < D; i++){
             for (int j = 0; j < T; j++){
                 if (j == LUNCH){
                     schedule[i][j] = "Lunch";
+                    scheduleBak[i][j] = "Lunch";
                 } else { 
                     schedule[i][j] = "";
+                    scheduleBak[i][j] = "";
                 }
                 
                 openings.add(new Opening(i, j));
+                openingsBak.add(new Opening(i, j));
             }
         }
     }
     
     public void refresh(){
         openings = new HashSet<Opening>();
+        openingsBak = new HashSet<Opening>();
         for (int i = 0; i < D; i++){
             for (int j = 0; j < T; j++){
                 if (!schedule[i][j].equals("DNF")){
                     schedule[i][j] = "";
                     openings.add(new Opening(i, j));
+                    
+                    scheduleBak[i][j] = "";
+                    openingsBak.add(new Opening(i, j));
                 }
                 
                 if (j == LUNCH){
@@ -43,6 +53,26 @@ public class Schedule {
                 }
             }
         }
+    }
+    
+    public void backUp(){
+    	for (int i = 0; i < D; i++){
+            for (int j = 0; j < T; j++){
+                scheduleBak[i][j] = schedule[i][j];
+            }
+        }
+        
+        openingsBak = new HashSet<Opening>(openings);
+    }
+    
+    public void restore(){
+        for (int i = 0; i < D; i++){
+            for (int j = 0; j < T; j++){
+                schedule[i][j] = scheduleBak[i][j];
+            }
+        }
+        
+        openings = new HashSet<Opening>(openingsBak);
     }
     
     public ArrayList<String> getOpenings(){

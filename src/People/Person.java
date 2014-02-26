@@ -9,6 +9,7 @@ public abstract class Person {
     
     public int totalCourses = 0;
     public int coursesLeftToSchedule = 0;
+    public int coursesLeftToScheduleBak = 0;
     
     public Person(String name){
         this.name = name;
